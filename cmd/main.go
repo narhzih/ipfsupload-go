@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"fmt"
+	"github.com/joho/godotenv"
 	"github.com/rs/zerolog"
 	"ipfsupload-go/api"
 	"net/http"
@@ -15,6 +16,12 @@ import (
 func main() {
 	// Initial Application initialization
 	logger := zerolog.New(os.Stderr).With().Caller().Timestamp().Logger()
+
+	// Try to load env values
+	err := godotenv.Load()
+	if err != nil {
+		logger.Fatal().Msg("Error loading .env file")
+	}
 	apiInit := api.NewApi("/v1", logger)
 
 	ctx, stop := signal.NotifyContext(context.Background(), syscall.SIGINT, syscall.SIGTERM)
